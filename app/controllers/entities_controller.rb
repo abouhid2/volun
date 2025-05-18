@@ -1,5 +1,7 @@
 class EntitiesController < ApplicationController
+  skip_before_action :authenticate_user
   before_action :set_entity, only: [:show, :update, :destroy]
+  before_action :ensure_owner, only: [:destroy]
 
   def index
     @entities = Entity.all
@@ -12,6 +14,7 @@ class EntitiesController < ApplicationController
 
   def create
     @entity = Entity.new(entity_params)
+    @entity.user = current_user
 
     if @entity.save
       render json: @entity, status: :created
@@ -39,6 +42,13 @@ class EntitiesController < ApplicationController
     @entity = Entity.find(params[:id])
   rescue ActiveRecord::RecordNotFound
     render json: { error: 'Entity not found' }, status: :not_found
+  end
+
+  def ensure_owner
+    return unless @entity.user_id
+    unless @entity.user_id == current_user&.id
+      render json: { error: 'Unauthorized' }, status: :unauthorized
+    end
   end
 
   def entity_params

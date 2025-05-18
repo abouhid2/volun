@@ -38,6 +38,9 @@ gem "rack-cors"
 # Add JWT for authentication
 gem "jwt"
 
+# Add soft delete functionality
+gem 'acts_as_paranoid', github: 'ActsAsParanoid/acts_as_paranoid'
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ]

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_18_192002) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_18_225511) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -24,6 +24,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_18_192002) do
     t.string "email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "deleted_at"
+    t.index ["deleted_at"], name: "index_entities_on_deleted_at"
   end
 
   create_table "events", force: :cascade do |t|
@@ -34,6 +36,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_18_192002) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "entity_id"
+    t.datetime "deleted_at"
+    t.index ["deleted_at"], name: "index_events_on_deleted_at"
     t.index ["entity_id"], name: "index_events_on_entity_id"
   end
 
@@ -52,6 +56,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_18_192002) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "password_digest"
+    t.datetime "deleted_at"
+    t.index ["deleted_at"], name: "index_users_on_deleted_at"
   end
 
   add_foreign_key "events", "entities"

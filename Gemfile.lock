@@ -1,3 +1,11 @@
+GIT
+  remote: https://github.com/ActsAsParanoid/acts_as_paranoid.git
+  revision: dca07493c663b2046778e77628e3e0d01b3e7d03
+  specs:
+    acts_as_paranoid (0.10.3)
+      activerecord (>= 6.1, < 8.1)
+      activesupport (>= 6.1, < 8.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -321,6 +329,7 @@ PLATFORMS
   x86_64-linux-musl
 
 DEPENDENCIES
+  acts_as_paranoid!
   bcrypt
   bootsnap
   brakeman

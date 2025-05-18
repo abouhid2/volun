@@ -16,8 +16,8 @@ module Api
       end
 
       def login
-        user = User.find_by(email: params[:email])
-        if user&.authenticate(params[:password])
+        user = User.find_by(email: auth_params[:email])
+        if user&.authenticate(auth_params[:password])
           token = generate_token(user.id)
           render json: { token: token, user: user.as_json(except: :password_digest) }
         else
@@ -29,6 +29,10 @@ module Api
 
       def user_params
         params.require(:user).permit(:email, :password, :name)
+      end
+
+      def auth_params
+        params.require(:auth).permit(:email, :password)
       end
 
       def generate_token(user_id)

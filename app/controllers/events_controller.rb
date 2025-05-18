@@ -1,9 +1,10 @@
 class EventsController < ApplicationController
+  skip_before_action :authenticate_user
   before_action :set_event, only: [:show, :update, :destroy]
-  before_action :ensure_owner, only: [:update, :destroy]
+  before_action :ensure_owner, only: [:destroy]
 
   def index
-    events = Event.all
+    events = Event.where(entity_id: params[:entity_id])
     render json: events
   end
 
@@ -13,6 +14,8 @@ class EventsController < ApplicationController
 
   def create
     event = current_user.events.new(event_params)
+    event.entity_id = params[:entity_id]
+    
     if event.save
       render json: event, status: :created
     else
@@ -42,6 +45,7 @@ class EventsController < ApplicationController
   end
 
   def ensure_owner
+    return unless @event.user_id
     unless @event.user_id == current_user&.id
       render json: { error: 'Unauthorized' }, status: :unauthorized
     end
