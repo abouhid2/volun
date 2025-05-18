@@ -1,3 +1,3 @@
 class ApplicationController < ActionController::API
-  include JwtAuthenticatable
+  # include JwtAuthenticatable
 end
