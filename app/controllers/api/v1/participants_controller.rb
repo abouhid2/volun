@@ -3,27 +3,16 @@ module Api
     class ParticipantsController < ApplicationController
       skip_before_action :authenticate_user
       before_action :set_event
-      before_action :set_participant, only: [:update, :destroy]
+      before_action :set_participant, only: [:destroy]
 
       def create
-        participant = @event.participants.new(name: params[:name], status: params[:status] || 'going')
-        if current_user
-          participant.user = current_user
-          participant.name = current_user.name
-        end
+        participant_data = params[:participant].present? ? participant_params : direct_params
+        participant = @event.participants.new(participant_data)
         
         if participant.save
           render json: participant, status: :created
         else
           render json: { errors: participant.errors.full_messages }, status: :unprocessable_entity
-        end
-      end
-
-      def update
-        if @participant.update(participant_params)
-          render json: @participant
-        else
-          render json: { errors: @participant.errors.full_messages }, status: :unprocessable_entity
         end
       end
 
@@ -45,6 +34,14 @@ module Api
       rescue ActiveRecord::RecordNotFound
         render json: { error: 'Participant not found' }, status: :not_found
       end
+
+      def participant_params
+        params.require(:participant).permit(:name, :status)
+      end
+
+      def direct_params
+        params.permit(:name, :status)
+      end
     end
   end
-end
+end 
