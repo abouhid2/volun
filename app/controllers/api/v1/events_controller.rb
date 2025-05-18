@@ -1,20 +1,21 @@
 module Api
   module V1
     class EventsController < ApplicationController
+      skip_before_action :authenticate_user, only: [:index, :show]
+      before_action :set_event, only: [:show, :update, :destroy]
+      before_action :ensure_owner, only: [:update, :destroy]
+
       def index
         events = Event.all
         render json: events
       end
 
       def show
-        event = Event.find(params[:id])
-        render json: event
-      rescue ActiveRecord::RecordNotFound
-        render json: { error: 'Event not found' }, status: :not_found
+        render json: @event
       end
 
       def create
-        event = Event.new(event_params)
+        event = current_user.events.new(event_params)
         if event.save
           render json: event, status: :created
         else
@@ -23,25 +24,31 @@ module Api
       end
 
       def update
-        event = Event.find(params[:id])
-        if event.update(event_params)
-          render json: event
+        if @event.update(event_params)
+          render json: @event
         else
-          render json: { errors: event.errors.full_messages }, status: :unprocessable_entity
+          render json: { errors: @event.errors.full_messages }, status: :unprocessable_entity
         end
-      rescue ActiveRecord::RecordNotFound
-        render json: { error: 'Event not found' }, status: :not_found
       end
 
       def destroy
-        event = Event.find(params[:id])
-        event.destroy
+        @event.destroy
         head :no_content
+      end
+
+      private
+
+      def set_event
+        @event = Event.find(params[:id])
       rescue ActiveRecord::RecordNotFound
         render json: { error: 'Event not found' }, status: :not_found
       end
 
-      private
+      def ensure_owner
+        unless @event.user_id == current_user&.id
+          render json: { error: 'Unauthorized' }, status: :unauthorized
+        end
+      end
 
       def event_params
         params.require(:event).permit(:title, :description, :date, :location)
