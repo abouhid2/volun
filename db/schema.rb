@@ -10,9 +10,32 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_20_002918) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_20_004515) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "cars", force: :cascade do |t|
+    t.bigint "event_id", null: false
+    t.bigint "driver_id", null: false
+    t.integer "seats"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["driver_id"], name: "index_cars_on_driver_id"
+    t.index ["event_id"], name: "index_cars_on_event_id"
+  end
+
+  create_table "donations", force: :cascade do |t|
+    t.bigint "event_id", null: false
+    t.bigint "user_id", null: false
+    t.string "donation_type"
+    t.decimal "quantity"
+    t.string "unit"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id"], name: "index_donations_on_event_id"
+    t.index ["user_id"], name: "index_donations_on_user_id"
+  end
 
   create_table "entities", force: :cascade do |t|
     t.string "name"
@@ -39,6 +62,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_20_002918) do
     t.datetime "deleted_at"
     t.bigint "user_id"
     t.datetime "time"
+    t.integer "total_participants"
+    t.integer "total_cars"
     t.index ["deleted_at"], name: "index_events_on_deleted_at"
     t.index ["entity_id"], name: "index_events_on_entity_id"
     t.index ["user_id"], name: "index_events_on_user_id"
@@ -63,6 +88,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_20_002918) do
     t.index ["deleted_at"], name: "index_users_on_deleted_at"
   end
 
+  add_foreign_key "cars", "events"
+  add_foreign_key "cars", "users", column: "driver_id"
+  add_foreign_key "donations", "events"
+  add_foreign_key "donations", "users"
   add_foreign_key "events", "entities"
   add_foreign_key "events", "users"
 end

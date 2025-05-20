@@ -1,10 +1,11 @@
 Rails.application.routes.draw do
-  
   resources :entities do
     resources :events
   end
   resources :events do
     resources :participants, only: [:create, :update, :destroy]
+    resources :cars, only: [:index, :create, :update, :destroy]
+    resources :donations, only: [:index, :create, :update, :destroy]
   end
   namespace :api do
     namespace :v1 do

@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  event: one
+  user: one
+  donation_type: MyString
+  quantity: 9.99
+  unit: MyString
+  description: MyText
+
+two:
+  event: two
+  user: two
+  donation_type: MyString
+  quantity: 9.99
+  unit: MyString
+  description: MyText
