@@ -10,17 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_20_004515) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_20_170149) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
   create_table "cars", force: :cascade do |t|
     t.bigint "event_id", null: false
-    t.bigint "driver_id", null: false
     t.integer "seats"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["driver_id"], name: "index_cars_on_driver_id"
+    t.string "driver_name"
+    t.datetime "deleted_at"
+    t.index ["deleted_at"], name: "index_cars_on_deleted_at"
     t.index ["event_id"], name: "index_cars_on_event_id"
   end
 
@@ -33,6 +34,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_20_004515) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "deleted_at"
+    t.index ["deleted_at"], name: "index_donations_on_deleted_at"
     t.index ["event_id"], name: "index_donations_on_event_id"
     t.index ["user_id"], name: "index_donations_on_user_id"
   end
@@ -48,7 +51,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_20_004515) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
+    t.bigint "user_id"
     t.index ["deleted_at"], name: "index_entities_on_deleted_at"
+    t.index ["user_id"], name: "index_entities_on_user_id"
   end
 
   create_table "events", force: :cascade do |t|
@@ -76,6 +81,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_20_004515) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "name"
+    t.datetime "deleted_at"
+    t.integer "car_id"
+    t.index ["car_id"], name: "index_participants_on_car_id"
+    t.index ["deleted_at"], name: "index_participants_on_deleted_at"
   end
 
   create_table "users", force: :cascade do |t|
@@ -89,9 +98,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_20_004515) do
   end
 
   add_foreign_key "cars", "events"
-  add_foreign_key "cars", "users", column: "driver_id"
   add_foreign_key "donations", "events"
   add_foreign_key "donations", "users"
+  add_foreign_key "entities", "users"
   add_foreign_key "events", "entities"
   add_foreign_key "events", "users"
+  add_foreign_key "participants", "cars"
 end

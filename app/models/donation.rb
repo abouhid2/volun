@@ -23,9 +23,6 @@ class Donation < ApplicationRecord
   ].freeze
   
   validates :donation_type, presence: true, inclusion: { in: DONATION_TYPES }
-  validates :quantity, presence: true, numericality: { greater_than: 0 }
-  validates :unit, presence: true, inclusion: { in: UNITS }
-  validates :description, presence: true
   
   scope :by_type, ->(type) { where(donation_type: type) }
   scope :food_donations, -> { where(donation_type: ['food', 'drinks']) }

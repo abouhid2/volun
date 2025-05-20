@@ -3,7 +3,7 @@ class CarsController < ApplicationController
   before_action :set_car, only: [:update, :destroy]
 
   def index
-    @cars = @event.cars.includes(:driver)
+    @cars = @event.cars
     render json: @cars
   end
 
@@ -42,8 +42,8 @@ class CarsController < ApplicationController
 
   def car_params
     if params[:driver].present?
-      params[:car][:driver_id] = params[:driver][:id]
+      params[:car][:driver_name] = params[:driver][:name]
     end
-    params.require(:car).permit(:driver_id, :seats)
+    params.require(:car).permit(:driver_name, :seats)
   end
 end

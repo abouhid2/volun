@@ -13,12 +13,12 @@ class Participant < ApplicationRecord
   private
   
   def car_belongs_to_event
-    return unless car_id.present?
+    return unless car_id.present? && car.present?
     errors.add(:car_id, 'must belong to the same event') unless car.event_id == event_id
   end
   
   def car_has_available_seats
-    return unless car_id.present?
+    return unless car.present?
     errors.add(:car_id, 'has no available seats') if car.available_seats <= 0
   end
 end

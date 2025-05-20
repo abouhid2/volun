@@ -9,8 +9,6 @@ class Event < ApplicationRecord
   has_many :donations
   
   validates :title, presence: true
-  validates :total_participants, presence: true, numericality: { greater_than: 0 }
-  validates :total_cars, presence: true, numericality: { greater_than: 0 }
   
   def available_seats
     cars.sum(:seats) - participants.where.not(car_id: nil).count
