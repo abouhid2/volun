@@ -4,7 +4,11 @@ Rails.application.routes.draw do
   end
   resources :events do
     resources :participants, only: [:index, :create, :update, :destroy]
-    resources :cars, only: [:index, :create, :update, :destroy]
+    resources :cars, only: [:index, :create, :update, :destroy] do
+      member do
+        post :clean_seats
+      end
+    end
     resources :donations, only: [:index, :create, :update, :destroy]
   end
   namespace :api do

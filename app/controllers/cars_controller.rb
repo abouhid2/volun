@@ -1,6 +1,6 @@
 class CarsController < ApplicationController
   before_action :set_event
-  before_action :set_car, only: [:update, :destroy]
+  before_action :set_car, only: [:update, :destroy, :clean_seats]
 
   def index
     @cars = @event.cars
@@ -30,14 +30,28 @@ class CarsController < ApplicationController
     head :no_content
   end
 
+  def clean_seats
+    begin
+      driver_ids = params[:driver_ids] || []
+      @car.clean_seats(driver_ids)
+      render json: { message: 'Car seats cleaned successfully', car: @car }
+    rescue => e
+      render json: { error: e.message }, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def set_event
     @event = Event.find(params[:event_id])
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: 'Event not found' }, status: :not_found
   end
 
   def set_car
     @car = @event.cars.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: 'Car not found' }, status: :not_found
   end
 
   def car_params

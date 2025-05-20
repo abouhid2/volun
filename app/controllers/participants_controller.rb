@@ -20,10 +20,18 @@ class ParticipantsController < ApplicationController
   end
 
   def update
-    if @participant.update(participant_params)
-      render json: @participant
+    if params[:participant].present?
+      if @participant.update(participant_params)
+        render json: @participant
+      else
+        render json: { errors: @participant.errors.full_messages }, status: :unprocessable_entity
+      end
     else
-      render json: { errors: @participant.errors.full_messages }, status: :unprocessable_entity
+      if @participant.update(car_id: nil)
+        render json: @participant
+      else
+        render json: { errors: @participant.errors.full_messages }, status: :unprocessable_entity
+      end
     end
   end
 
@@ -47,10 +55,10 @@ class ParticipantsController < ApplicationController
   end
 
   def participant_params
-    params.require(:participant).permit(:name, :status)
+    params.require(:participant).permit(:name, :status, :car_id)
   end
 
   def direct_params
-    params.permit(:name, :status).merge(status: params[:status] || 'going')
+    params.permit(:name, :status, :car_id).merge(status: params[:status] || 'going')
   end
 end
