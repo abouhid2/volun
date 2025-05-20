@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_18_225511) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_20_002918) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -37,8 +37,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_18_225511) do
     t.datetime "updated_at", null: false
     t.bigint "entity_id"
     t.datetime "deleted_at"
+    t.bigint "user_id"
+    t.datetime "time"
     t.index ["deleted_at"], name: "index_events_on_deleted_at"
     t.index ["entity_id"], name: "index_events_on_entity_id"
+    t.index ["user_id"], name: "index_events_on_user_id"
   end
 
   create_table "participants", force: :cascade do |t|
@@ -61,4 +64,5 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_18_225511) do
   end
 
   add_foreign_key "events", "entities"
+  add_foreign_key "events", "users"
 end

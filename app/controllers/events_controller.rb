@@ -1,5 +1,5 @@
 class EventsController < ApplicationController
-  skip_before_action :authenticate_user
+  skip_before_action :authenticate_user, only: [:index, :show]
   before_action :set_event, only: [:show, :update, :destroy]
   before_action :ensure_owner, only: [:destroy]
 
@@ -15,6 +15,8 @@ class EventsController < ApplicationController
   def create
     event = current_user.events.new(event_params)
     event.entity_id = params[:entity_id]
+    
+    event.description = nil if event.description.blank?
     
     if event.save
       render json: event, status: :created
@@ -52,6 +54,6 @@ class EventsController < ApplicationController
   end
 
   def event_params
-    params.require(:event).permit(:title, :description, :date, :location)
+    params.require(:event).permit(:title, :description, :date, :time, :location)
   end
 end

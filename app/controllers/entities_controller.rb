@@ -1,5 +1,5 @@
 class EntitiesController < ApplicationController
-  skip_before_action :authenticate_user
+  skip_before_action :authenticate_user, only: [:index, :show]
   before_action :set_entity, only: [:show, :update, :destroy]
   before_action :ensure_owner, only: [:destroy]
 
