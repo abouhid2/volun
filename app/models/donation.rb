@@ -1,6 +1,7 @@
 class Donation < ApplicationRecord
   belongs_to :event
   belongs_to :user
+  belongs_to :car, optional: true
   
   DONATION_TYPES = [
     'drinks',

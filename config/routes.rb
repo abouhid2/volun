@@ -1,15 +1,26 @@
 Rails.application.routes.draw do
   resources :entities do
+    member do
+      post :duplicate
+    end
     resources :events
   end
   resources :events do
+    member do
+      post :duplicate
+    end
     resources :participants, only: [:index, :create, :update, :destroy]
     resources :cars, only: [:index, :create, :update, :destroy] do
       member do
         post :clean_seats
+        post :clean_donations
       end
     end
-    resources :donations, only: [:index, :create, :update, :destroy]
+    resources :donations, only: [:index, :create, :update, :destroy] do
+      member do
+        post :duplicate
+      end
+    end
   end
   namespace :api do
     namespace :v1 do

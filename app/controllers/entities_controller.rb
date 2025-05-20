@@ -1,7 +1,7 @@
 class EntitiesController < ApplicationController
   skip_before_action :authenticate_user, only: [:index, :show]
-  before_action :set_entity, only: [:show, :update, :destroy]
-  before_action :ensure_owner, only: [:destroy]
+  before_action :set_entity, only: [:show, :update, :destroy, :duplicate]
+  before_action :ensure_owner, only: [:destroy, :duplicate]
 
   def index
     @entities = Entity.all
@@ -34,6 +34,24 @@ class EntitiesController < ApplicationController
   def destroy
     @entity.destroy
     head :no_content
+  end
+
+  def duplicate
+    new_entity = @entity.dup
+    new_entity.name = "#{@entity.name} (Copy)"
+    new_entity.user = current_user
+
+    if new_entity.save
+      @entity.events.each do |event|
+        new_event = event.dup
+        new_event.entity = new_entity
+        new_event.title = "#{event.title} (Copy)"
+        new_event.save
+      end
+      render json: new_entity, status: :created
+    else
+      render json: { errors: new_entity.errors.full_messages }, status: :unprocessable_entity
+    end
   end
 
   private

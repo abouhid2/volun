@@ -1,6 +1,7 @@
 class CarsController < ApplicationController
+  skip_before_action :authenticate_user
   before_action :set_event
-  before_action :set_car, only: [:update, :destroy, :clean_seats]
+  before_action :set_car, only: [:update, :destroy, :clean_seats, :clean_donations]
 
   def index
     @cars = @event.cars
@@ -35,6 +36,15 @@ class CarsController < ApplicationController
       driver_ids = params[:driver_ids] || []
       @car.clean_seats(driver_ids)
       render json: { message: 'Car seats cleaned successfully', car: @car }
+    rescue => e
+      render json: { error: e.message }, status: :unprocessable_entity
+    end
+  end
+
+  def clean_donations
+    begin
+      @car.clean_donations
+      render json: { message: 'Car donations cleaned successfully', car: @car }
     rescue => e
       render json: { error: e.message }, status: :unprocessable_entity
     end

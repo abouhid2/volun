@@ -1,6 +1,7 @@
 class DonationsController < ApplicationController
+  skip_before_action :authenticate_user
   before_action :set_event
-  before_action :set_donation, only: [:update, :destroy]
+  before_action :set_donation, only: [:update, :destroy, :duplicate]
 
   def index
     @donations = @event.donations.includes(:user)
@@ -31,6 +32,18 @@ class DonationsController < ApplicationController
     head :no_content
   end
 
+  def duplicate
+    new_donation = @donation.dup
+    new_donation.user = current_user
+    new_donation.event = @event
+
+    if new_donation.save
+      render json: new_donation, status: :created
+    else
+      render json: { errors: new_donation.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def set_event
@@ -42,6 +55,6 @@ class DonationsController < ApplicationController
   end
 
   def donation_params
-    params.require(:donation).permit(:donation_type, :quantity, :unit, :description)
+    params.require(:donation).permit(:donation_type, :quantity, :unit, :description, :car_id)
   end
 end
