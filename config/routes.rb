@@ -32,6 +32,7 @@ Rails.application.routes.draw do
       end
     end
     resource :donation_settings, only: [:show, :update]
+    resources :comments, only: [:index, :create, :update, :destroy]
   end
   namespace :api do
     namespace :v1 do

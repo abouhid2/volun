@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_20_230913) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_21_170808) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -23,6 +23,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_20_230913) do
     t.datetime "deleted_at"
     t.index ["deleted_at"], name: "index_cars_on_deleted_at"
     t.index ["event_id"], name: "index_cars_on_event_id"
+  end
+
+  create_table "comments", force: :cascade do |t|
+    t.text "content"
+    t.bigint "event_id", null: false
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id"], name: "index_comments_on_event_id"
+    t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
   create_table "donation_settings", force: :cascade do |t|
@@ -109,6 +119,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_20_230913) do
   end
 
   add_foreign_key "cars", "events"
+  add_foreign_key "comments", "events"
+  add_foreign_key "comments", "users"
   add_foreign_key "donation_settings", "events"
   add_foreign_key "donations", "cars"
   add_foreign_key "donations", "events"
