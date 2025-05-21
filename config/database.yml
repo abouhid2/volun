@@ -19,7 +19,6 @@ default: &default
   # https://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
-
 development:
   <<: *default
   database: volun_development
@@ -83,6 +82,7 @@ production:
     <<: *default
     database: volun_production
     username: volun
+    url: <%= ENV["VOLUN_DATABASE_URL"] %>
     password: <%= ENV["VOLUN_DATABASE_PASSWORD"] %>
   cache:
     <<: *primary_production
