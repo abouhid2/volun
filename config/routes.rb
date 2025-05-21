@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  root to: proc { [200, {}, ['Backend is running']] }
   resources :entities do
     member do
       post :duplicate
