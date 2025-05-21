@@ -3,27 +3,9 @@ class Donation < ApplicationRecord
   belongs_to :user
   belongs_to :car, optional: true
   
-  DONATION_TYPES = [
-    'drinks',
-    'food',
-    'dog_food',
-    'cleaning_supplies',
-    'medical_supplies',
-    'clothing',
-    'other'
-  ].freeze
-  
-  UNITS = [
-    'kg',
-    'g',
-    'l',
-    'ml',
-    'units',
-    'boxes',
-    'bags'
-  ].freeze
-  
-  validates :donation_type, presence: true, inclusion: { in: DONATION_TYPES }
+  validates :donation_type, presence: true
+  validates :quantity, presence: true, numericality: { greater_than: 0 }
+  validates :unit, presence: true
   
   scope :by_type, ->(type) { where(donation_type: type) }
   scope :food_donations, -> { where(donation_type: ['food', 'drinks']) }

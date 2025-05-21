@@ -21,6 +21,7 @@ Rails.application.routes.draw do
         post :duplicate
       end
     end
+    resource :donation_settings, only: [:show, :update]
   end
   namespace :api do
     namespace :v1 do

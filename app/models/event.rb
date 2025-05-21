@@ -7,6 +7,7 @@ class Event < ApplicationRecord
   has_many :cars
   has_many :users, through: :participants
   has_many :donations
+  has_one :donation_setting, dependent: :destroy
   
   validates :title, presence: true
   
@@ -24,5 +25,16 @@ class Event < ApplicationRecord
   
   def supplies_donations
     donations.supplies_donations
+  end
+
+  after_create :create_default_donation_settings
+
+  private
+
+  def create_default_donation_settings
+    create_donation_setting(
+      types: DonationSetting.default_types,
+      units: DonationSetting.default_units
+    )
   end
 end
