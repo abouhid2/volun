@@ -3,17 +3,27 @@ Rails.application.routes.draw do
     member do
       post :duplicate
     end
-    resources :events
+    resources :events do
+      member do
+        post :duplicate
+        post :recurrent
+      end
+    end
   end
   resources :events do
     member do
       post :duplicate
     end
-    resources :participants, only: [:index, :create, :update, :destroy]
+    resources :participants, only: [:index, :create, :update, :destroy] do
+      member do
+        post :duplicate
+      end
+    end
     resources :cars, only: [:index, :create, :update, :destroy] do
       member do
         post :clean_seats
         post :clean_donations
+        post :duplicate
       end
     end
     resources :donations, only: [:index, :create, :update, :destroy] do

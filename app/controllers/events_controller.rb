@@ -39,29 +39,45 @@ class EventsController < ApplicationController
   end
 
   def duplicate
+    keep_cars = ActiveModel::Type::Boolean.new.cast(params[:keepCars])
+    keep_donations = ActiveModel::Type::Boolean.new.cast(params[:keepDonations])
+    keep_participants = ActiveModel::Type::Boolean.new.cast(params[:keepParticipants])
+
     new_event = @event.dup
-    new_event.title = "#{@event.title} (Copy)"
+    new_event.title = params[:title] || "#{@event.title} (Copy)"
+    new_event.description = params[:description]
+    new_event.date = params[:date] if params[:date].present?
+    new_event.time = params[:time] if params[:time].present?
+    new_event.location = params[:location] if params[:location].present?
     new_event.user = current_user
     new_event.entity = @event.entity
 
     if new_event.save
-      @event.cars.each do |car|
-        new_car = car.dup
-        new_car.event = new_event
-        new_car.save
+      if keep_cars
+        @event.cars.each do |car|
+          new_car = car.dup
+          new_car.event = new_event
+          new_car.save
+        end
       end
 
-      @event.donations.each do |donation|
-        new_donation = donation.dup
-        new_donation.event = new_event
-        new_donation.user = current_user
-        new_donation.save
+      if keep_donations
+        @event.donations.each do |donation|
+          new_donation = donation.dup
+          new_donation.event = new_event
+          new_donation.user = current_user
+          new_donation.car_id = nil
+          new_donation.save
+        end
       end
 
-      @event.participants.each do |participant|
-        new_participant = participant.dup
-        new_participant.event = new_event
-        new_participant.save
+      if keep_participants
+        @event.participants.each do |participant|
+          new_participant = participant.dup
+          new_participant.event = new_event
+          new_participant.car_id = nil
+          new_participant.save
+        end
       end
 
       render json: new_event, status: :created

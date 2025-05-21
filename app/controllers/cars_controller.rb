@@ -1,7 +1,7 @@
 class CarsController < ApplicationController
   skip_before_action :authenticate_user
   before_action :set_event
-  before_action :set_car, only: [:update, :destroy, :clean_seats, :clean_donations]
+  before_action :set_car, only: [:update, :destroy, :clean_seats, :clean_donations, :duplicate]
 
   def index
     @cars = @event.cars
@@ -47,6 +47,16 @@ class CarsController < ApplicationController
       render json: { message: 'Car donations cleaned successfully', car: @car }
     rescue => e
       render json: { error: e.message }, status: :unprocessable_entity
+    end
+  end
+
+  def duplicate
+    new_car = @car.dup
+    new_car.event = @event
+    if new_car.save
+      render json: new_car, status: :created
+    else
+      render json: { errors: new_car.errors.full_messages }, status: :unprocessable_entity
     end
   end
 

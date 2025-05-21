@@ -1,7 +1,7 @@
 class ParticipantsController < ApplicationController
   skip_before_action :authenticate_user
   before_action :set_event
-  before_action :set_participant, only: [:update, :destroy]
+  before_action :set_participant, only: [:update, :destroy, :duplicate]
 
   def index
     @participants = @event.participants
@@ -38,6 +38,16 @@ class ParticipantsController < ApplicationController
   def destroy
     @participant.destroy
     head :no_content
+  end
+
+  def duplicate
+    new_participant = @participant.dup
+    new_participant.event = @event
+    if new_participant.save
+      render json: new_participant, status: :created
+    else
+      render json: { errors: new_participant.errors.full_messages }, status: :unprocessable_entity
+    end
   end
 
   private
