@@ -7,9 +7,9 @@ class EventsController < ApplicationController
     events = Event.where(entity_id: params[:entity_id])
     events_with_counts = events.map do |event|
       event.as_json.merge(
-        participants: event.total_participants,
-        cars: event.total_cars,
-        donations: event.total_donations
+        total_participants: event.total_participants,
+        total_cars: event.total_cars,
+        total_donations: event.total_donations
       )
     end
     render json: events_with_counts
