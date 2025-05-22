@@ -20,12 +20,16 @@ class Event < ApplicationRecord
     donations.total_by_type(id, type)
   end
   
-  def food_donations
-    donations.food_donations
+  def total_participants
+    participants.count
   end
-  
-  def supplies_donations
-    donations.supplies_donations
+
+  def total_cars
+    cars.count
+  end
+
+  def total_donations
+    donations.count
   end
 
   after_create :create_default_donation_settings
