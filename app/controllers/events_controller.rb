@@ -15,6 +15,22 @@ class EventsController < ApplicationController
     render json: events_with_counts
   end
 
+  def my_events
+    participant_events = Event.joins(:participants)
+                             .where(participants: { user_id: current_user.id })
+                             .distinct
+
+    events_with_counts = participant_events.map do |event|
+      event.as_json.merge(
+        total_participants: event.total_participants,
+        total_cars: event.total_cars,
+        total_donations: event.total_donations
+      )
+    end
+    
+    render json: events_with_counts
+  end
+
   def show
     render json: @event
   end

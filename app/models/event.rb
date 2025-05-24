@@ -9,6 +9,7 @@ class Event < ApplicationRecord
   has_many :donations
   has_one :donation_setting, dependent: :destroy
   has_many :comments, dependent: :destroy
+  has_many :pictures, as: :imageable, dependent: :destroy
   
   validates :title, presence: true
   

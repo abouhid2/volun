@@ -1,6 +1,12 @@
 Rails.application.routes.draw do
   root to: proc { [200, {}, ['Backend is running']] }
+  
+  resources :users do
+    resources :pictures, only: [:index, :show, :create, :update, :destroy]
+  end
+  
   resources :entities do
+    resources :pictures, only: [:index, :show, :create, :update, :destroy]
     member do
       post :duplicate
     end
@@ -11,7 +17,12 @@ Rails.application.routes.draw do
       end
     end
   end
+  
   resources :events do
+    resources :pictures, only: [:index, :show, :create, :update, :destroy]
+    collection do
+      get :my_events
+    end
     member do
       post :duplicate
     end
@@ -35,6 +46,7 @@ Rails.application.routes.draw do
     resource :donation_settings, only: [:show, :update]
     resources :comments, only: [:index, :create, :update, :destroy]
   end
+  
   post 'auth/register', to: 'auth#register'
   post 'auth/login', to: 'auth#login'
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
