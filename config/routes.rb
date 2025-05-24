@@ -12,8 +12,8 @@ Rails.application.routes.draw do
       end
     end
     resources :inventories do
-      member do
-        post :use_stock
+      collection do
+        post :use_stock, to: 'inventories#use_stock'
       end
       resources :inventory_transactions, only: [:index, :create]
     end

@@ -64,7 +64,7 @@ class InventoriesController < ApplicationController
   end
   
   def use_stock
-    @inventory = @entity.inventories.find(params[:id])
+    @inventory = @entity.inventories.find(params[:inventory_id])
     @event = Event.find(params[:event_id]) if params[:event_id].present?
     
     quantity = params[:quantity].to_d
@@ -98,7 +98,7 @@ class InventoriesController < ApplicationController
   end
 
   def set_inventory
-    @inventory = @entity.inventories.find(params[:id])
+    @inventory = @entity.inventories.find(params[:inventory_id])
   end
 
   def inventory_params
