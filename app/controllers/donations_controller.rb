@@ -13,7 +13,31 @@ class DonationsController < ApplicationController
     @donation.user = current_user
 
     if @donation.save
-      render json: @donation, status: :created
+      # Add to inventory if requested
+      if params[:add_to_inventory]
+        begin
+          inventory_transaction = @donation.add_to_inventory
+          if inventory_transaction&.persisted?
+            render json: {
+              donation: @donation,
+              inventory_transaction: inventory_transaction,
+              message: "Donation added and inventory updated"
+            }, status: :created
+          else
+            render json: { 
+              donation: @donation, 
+              warning: "Donation created but failed to add to inventory"
+            }, status: :created
+          end
+        rescue => e
+          render json: { 
+            donation: @donation, 
+            warning: "Donation created but failed to add to inventory: #{e.message}"
+          }, status: :created
+        end
+      else
+        render json: @donation, status: :created
+      end
     else
       render json: { errors: @donation.errors.full_messages }, status: :unprocessable_entity
     end
@@ -41,6 +65,24 @@ class DonationsController < ApplicationController
       render json: new_donation, status: :created
     else
       render json: { errors: new_donation.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+  
+  def add_to_inventory
+    begin
+      transaction = @donation.add_to_inventory
+      
+      if transaction&.persisted?
+        render json: {
+          donation: @donation,
+          inventory_transaction: transaction,
+          message: "Successfully added donation to inventory"
+        }
+      else
+        render json: { errors: ["Failed to add donation to inventory"] }, status: :unprocessable_entity
+      end
+    rescue => e
+      render json: { errors: ["Error: #{e.message}"] }, status: :unprocessable_entity
     end
   end
 

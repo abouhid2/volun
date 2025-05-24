@@ -1,6 +1,6 @@
 class EventsController < ApplicationController
   skip_before_action :authenticate_user, only: [:index, :show]
-  before_action :set_event, only: [:show, :update, :destroy, :duplicate]
+  before_action :set_event, only: [:show, :update, :destroy, :duplicate, :use_inventory]
   before_action :ensure_owner, only: [:destroy, :duplicate]
 
   def index
@@ -90,6 +90,36 @@ class EventsController < ApplicationController
       render json: new_event, status: :created
     else
       render json: { errors: new_event.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
+  def use_inventory
+    inventory = @event.entity.inventories.find(params[:inventory_id])
+    quantity = params[:quantity].to_d
+    
+    # Check if we have enough stock
+    if inventory.quantity < quantity
+      render json: { errors: ["Insufficient stock. Available: #{inventory.quantity} #{inventory.unit}"] }, status: :unprocessable_entity
+      return
+    end
+    
+    # Create transaction
+    transaction = inventory.inventory_transactions.new(
+      event: @event,
+      user: current_user,
+      transaction_type: 'deduction',
+      quantity: quantity,
+      notes: params[:notes] || "Used in event: #{@event.title}"
+    )
+    
+    if transaction.save && inventory.update(quantity: inventory.quantity - quantity)
+      render json: { 
+        inventory: inventory, 
+        transaction: transaction,
+        message: "Successfully used #{quantity} #{inventory.unit} of #{inventory.item_name}" 
+      }
+    else
+      render json: { errors: transaction.errors.full_messages }, status: :unprocessable_entity
     end
   end
 

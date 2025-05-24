@@ -8,12 +8,20 @@ Rails.application.routes.draw do
       member do
         post :duplicate
         post :recurrent
+        post :use_inventory
       end
+    end
+    resources :inventories do
+      member do
+        post :use_stock
+      end
+      resources :inventory_transactions, only: [:index, :create]
     end
   end
   resources :events do
     member do
       post :duplicate
+      post :use_inventory
     end
     resources :participants, only: [:index, :create, :update, :destroy] do
       member do
@@ -30,6 +38,7 @@ Rails.application.routes.draw do
     resources :donations, only: [:index, :create, :update, :destroy] do
       member do
         post :duplicate
+        post :add_to_inventory
       end
     end
     resource :donation_settings, only: [:show, :update]

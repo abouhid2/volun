@@ -7,6 +7,7 @@ class Event < ApplicationRecord
   has_many :cars
   has_many :users, through: :participants
   has_many :donations
+  has_many :inventory_transactions
   has_one :donation_setting, dependent: :destroy
   has_many :comments, dependent: :destroy
   

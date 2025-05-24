@@ -9,7 +9,12 @@ class EntitiesController < ApplicationController
   end
 
   def show
-    render json: @entity
+    render json: @entity.as_json(include: {
+      inventories: { 
+        only: [:id, :item_name, :item_type, :quantity, :unit, :notes],
+        methods: [:created_at, :updated_at]
+      }
+    })
   end
 
   def create
