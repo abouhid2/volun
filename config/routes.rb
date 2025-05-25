@@ -17,6 +17,11 @@ Rails.application.routes.draw do
       end
       resources :inventory_transactions, only: [:index, :create]
     end
+    resources :requests do
+      member do
+        post :fulfill
+      end
+    end
   end
   resources :events do
     member do

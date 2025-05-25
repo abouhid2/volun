@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  entity: one
+  item_name: MyString
+  item_type: MyString
+  quantity: 9.99
+  unit: MyString
+  fulfilled: false
+  fulfilled_at: 2025-05-24 21:01:15
+  requested_by: MyString
+  notes: MyText
+
+two:
+  entity: two
+  item_name: MyString
+  item_type: MyString
+  quantity: 9.99
+  unit: MyString
+  fulfilled: false
+  fulfilled_at: 2025-05-24 21:01:15
+  requested_by: MyString
+  notes: MyText

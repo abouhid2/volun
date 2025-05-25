@@ -13,6 +13,10 @@ class EntitiesController < ApplicationController
       inventories: { 
         only: [:id, :item_name, :item_type, :quantity, :unit, :notes],
         methods: [:created_at, :updated_at]
+      },
+      requests: {
+        only: [:id, :item_name, :item_type, :quantity, :unit, :fulfilled, :fulfilled_at, :requested_by, :notes],
+        methods: [:created_at, :updated_at]
       }
     })
   end

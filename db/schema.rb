@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_24_193954) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_25_005438) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -175,6 +175,24 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_24_193954) do
     t.index ["imageable_type", "imageable_id"], name: "index_pictures_on_imageable_type_and_imageable_id"
   end
 
+  create_table "requests", force: :cascade do |t|
+    t.bigint "entity_id", null: false
+    t.string "item_name"
+    t.string "item_type"
+    t.decimal "quantity", precision: 10, scale: 2, default: "1.0"
+    t.string "unit"
+    t.boolean "fulfilled", default: false
+    t.datetime "fulfilled_at"
+    t.string "requested_by"
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "requested_at"
+    t.index ["entity_id"], name: "index_requests_on_entity_id"
+    t.index ["fulfilled"], name: "index_requests_on_fulfilled"
+    t.index ["item_type"], name: "index_requests_on_item_type"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "name"
     t.string "email"
@@ -204,4 +222,5 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_24_193954) do
   add_foreign_key "inventory_transactions", "inventories"
   add_foreign_key "inventory_transactions", "users"
   add_foreign_key "participants", "cars"
+  add_foreign_key "requests", "entities"
 end

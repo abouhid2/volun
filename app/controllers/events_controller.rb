@@ -16,7 +16,25 @@ class EventsController < ApplicationController
   end
 
   def show
-    render json: @event
+    includes = []
+    includes << :donations if params[:include]&.include?('donations')
+    includes << :participants if params[:include]&.include?('participants')
+    includes << :cars if params[:include]&.include?('cars')
+    includes << :comments if params[:include]&.include?('comments')
+    
+    response_data = @event.as_json
+    response_data[:total_participants] = @event.total_participants
+    response_data[:total_cars] = @event.total_cars
+    response_data[:total_donations] = @event.total_donations
+    
+    if includes.any?
+      included_data = @event.as_json(include: includes)
+      includes.each do |include_name|
+        response_data[include_name.to_s] = included_data[include_name.to_s]
+      end
+    end
+    
+    render json: response_data
   end
 
   def create
