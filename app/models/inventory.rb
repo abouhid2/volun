@@ -1,4 +1,6 @@
 class Inventory < ApplicationRecord
+  acts_as_paranoid
+  
   belongs_to :entity
   has_many :inventory_transactions, dependent: :destroy
   

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_25_005438) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_01_184852) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -130,6 +130,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_25_005438) do
     t.text "notes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "deleted_at"
+    t.index ["deleted_at"], name: "index_inventories_on_deleted_at"
     t.index ["entity_id", "item_type", "item_name", "unit"], name: "idx_inventory_unique_items", unique: true
     t.index ["entity_id"], name: "index_inventories_on_entity_id"
   end
@@ -188,6 +190,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_25_005438) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "requested_at"
+    t.datetime "deleted_at"
+    t.index ["deleted_at"], name: "index_requests_on_deleted_at"
     t.index ["entity_id"], name: "index_requests_on_entity_id"
     t.index ["fulfilled"], name: "index_requests_on_fulfilled"
     t.index ["item_type"], name: "index_requests_on_item_type"

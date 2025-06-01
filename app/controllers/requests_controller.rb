@@ -47,16 +47,17 @@ class RequestsController < ApplicationController
     @request.destroy
     head :no_content
   end
-  
+
   def fulfill
-    if @request.fulfill
-      render json: {
-        request: @request,
-        message: "Request fulfilled successfully"
-      }
+    if !@request.fulfilled?
+      @request.update(fulfilled: true, fulfilled_at: Time.current)
     else
-      render json: { errors: @request.errors.full_messages }, status: :unprocessable_entity
+      @request.update(fulfilled: false, fulfilled_at: nil)
     end
+    render json: {
+      request: @request,
+      message: "Request status updated successfully"
+    }
   end
 
   private

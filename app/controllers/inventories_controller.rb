@@ -96,9 +96,9 @@ class InventoriesController < ApplicationController
   def set_entity
     @entity = Entity.find(params[:entity_id])
   end
-
+  
   def set_inventory
-    @inventory = @entity.inventories.find(params[:inventory_id])
+    @inventory = @entity.inventories.find(params[:id])
   end
 
   def inventory_params

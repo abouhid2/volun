@@ -1,4 +1,6 @@
 class Request < ApplicationRecord
+  acts_as_paranoid
+  
   belongs_to :entity
   
   validates :item_name, presence: true
@@ -7,11 +9,22 @@ class Request < ApplicationRecord
   scope :fulfilled, -> { where(fulfilled: true) }
   scope :by_type, ->(type) { where(item_type: type) }
   
-  def fulfill
+    def fulfill
+      update(
+        fulfilled: true,
+        fulfilled_at: Time.current
+      )
+    end
+
+  def unfulfill
     update(
-      fulfilled: true,
-      fulfilled_at: Time.current
+      fulfilled: false,
+      fulfilled_at: nil
     )
+  end
+
+  def fulfilled?
+    fulfilled
   end
   
   def self.item_types
