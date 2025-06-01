@@ -1,4 +1,5 @@
 class RequestsController < ApplicationController
+  skip_before_action :authenticate_user
   before_action :set_entity
   before_action :set_request, only: [:show, :update, :destroy, :fulfill]
 

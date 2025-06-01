@@ -1,4 +1,6 @@
 class InventoriesController < ApplicationController
+  skip_before_action :authenticate_user
+
   before_action :set_entity
   before_action :set_inventory, only: [:show, :update, :destroy]
 
