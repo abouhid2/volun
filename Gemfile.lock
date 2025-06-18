@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/ActsAsParanoid/acts_as_paranoid.git
-  revision: dca07493c663b2046778e77628e3e0d01b3e7d03
+  revision: d079aaee33b8b2c336edb6508e5b7009bb5e7e3c
   specs:
     acts_as_paranoid (0.10.3)
       activerecord (>= 6.1, < 8.1)
@@ -81,13 +81,13 @@ GEM
       tzinfo (~> 2.0, >= 2.0.5)
       uri (>= 0.13.1)
     ast (2.4.3)
-    base64 (0.2.0)
+    base64 (0.3.0)
     bcrypt (3.1.20)
     bcrypt_pbkdf (1.1.1)
     bcrypt_pbkdf (1.1.1-arm64-darwin)
     bcrypt_pbkdf (1.1.1-x86_64-darwin)
-    benchmark (0.4.0)
-    bigdecimal (3.1.9)
+    benchmark (0.4.1)
+    bigdecimal (3.2.2)
     bootsnap (1.18.6)
       msgpack (~> 1.2)
     brakeman (7.0.2)
@@ -104,7 +104,7 @@ GEM
     dotenv-rails (3.1.8)
       dotenv (= 3.1.8)
       railties (>= 6.1)
-    drb (2.2.1)
+    drb (2.2.3)
     ed25519 (1.4.0)
     erubi (1.13.1)
     et-orbi (1.2.11)
