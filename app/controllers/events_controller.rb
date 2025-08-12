@@ -15,6 +15,7 @@ class EventsController < ApplicationController
     render json: events_with_counts
   end
 
+  
   def show
     includes = []
     includes << :donations if params[:include]&.include?('donations')
